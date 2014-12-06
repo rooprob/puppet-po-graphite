@@ -36,6 +36,10 @@ class graphite::install::source inherits graphite::params {
 #    ]
 #  }
 
+  package{'libcairo2-dev':
+    ensure => present
+  }
+
   wget::fetch { 'wget_whisper':
     source      => $whisper_dl_url,
     destination => $whisper_dl_loc,
@@ -64,10 +68,15 @@ class graphite::install::source inherits graphite::params {
     cwd         => $graphite::build_dir,
     command     => "/bin/tar -xzvf ${webapp_dl_loc}",
   }->
+  exec { 'install_ez_setup':
+    umask   => 002,
+    command => "/usr/bin/curl https://bootstrap.pypa.io/ez_setup.py | /usr/bin/python",
+  }->
   exec { 'install_graphite_prereqs':
     umask   => 002,
     cwd     => "${graphite::build_dir}/graphite-web-${graphite::graphite_version}",
     command => "/usr/bin/pip install -U -r requirements.txt",
+    require => Package['libcairo2-dev'],
   }->
   exec { 'install_graphite':
     cwd         => "${graphite::build_dir}/graphite-web-${graphite::graphite_version}",
