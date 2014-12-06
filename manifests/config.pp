@@ -41,7 +41,10 @@ class graphite::config inherits graphite::params {
     creates     => "${graphite::storage_dir}/graphite.db",
     command     => '/usr/bin/python manage.py syncdb --noinput',
     cwd         => "${graphite::install_dir}/webapp/graphite",
-    require     => File["${graphite::install_dir}/webapp/graphite/local_settings.py"],
+    require     => [
+      Class['Graphite::Install'],
+      File["${graphite::install_dir}/webapp/graphite/local_settings.py"],
+    ]
   }->
   exec { 'Set db owner':
     command     => "/bin/chown -R ${graphite::user}:${graphite::group} ${graphite::storage_dir}/graphite.db",
