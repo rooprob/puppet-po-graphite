@@ -20,6 +20,10 @@ class graphite::webserver::gunicorn inherits graphite::params {
       ensure    => installed,
       provider  => 'apt',
   }->
+  exec { 'venv-patch-gunicorn-helper':
+    command => "/bin/sed -i -e 's,/usr/bin/gunicorn_,/opt/graphite/bin/gunicorn_,g' /usr/sbin/gunicorn-debian"
+
+  }->
   service {
     'gunicorn':
       ensure     => running,
