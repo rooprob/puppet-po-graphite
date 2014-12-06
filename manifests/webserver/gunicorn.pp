@@ -18,7 +18,7 @@ class graphite::webserver::gunicorn inherits graphite::params {
   package {
     'gunicorn':
       ensure    => installed,
-      provider  => 'dpkg',
+      provider  => 'apt',
   }->
   service {
     'gunicorn':
