@@ -53,8 +53,9 @@ class graphite::install::source inherits graphite::params {
   }->
   # whisper goes to the /usr/bin by default. No overrides possible
   exec { 'install_whisper':
-    cwd         => "${graphite::build_dir}/whisper-${graphite::whisper_version}",
-    command     => '/usr/bin/python setup.py install',
+    umask   => 002,
+    cwd     => "${graphite::build_dir}/whisper-${graphite::whisper_version}",
+    command => '/usr/bin/python setup.py install',
   }
 
   wget::fetch { 'wget_graphite':
@@ -79,8 +80,9 @@ class graphite::install::source inherits graphite::params {
     require => Package['libcairo2-dev'],
   }->
   exec { 'install_graphite':
-    cwd         => "${graphite::build_dir}/graphite-web-${graphite::graphite_version}",
-    command     => "/usr/bin/python setup.py install --prefix=${graphite::install_dir} --install-lib=${graphite::install_dir}/webapp",
+    umask   => 002,
+    cwd     => "${graphite::build_dir}/graphite-web-${graphite::graphite_version}",
+    command => "/usr/bin/python setup.py install --prefix=${graphite::install_dir} --install-lib=${graphite::install_dir}/webapp",
   }
 
   wget::fetch { 'wget_carbon':
@@ -100,8 +102,9 @@ class graphite::install::source inherits graphite::params {
     command => "/usr/bin/pip install -U -r requirements.txt",
   }->
   exec { 'install_carbon':
-    cwd         => "${graphite::build_dir}/carbon-${graphite::carbon_version}",
-    command     => "/usr/bin/python setup.py install --prefix=${::graphite::install_dir} --install-lib=${::graphite::install_dir}/lib",
+    umask   => 002,
+    cwd     => "${graphite::build_dir}/carbon-${graphite::carbon_version}",
+    command => "/usr/bin/python setup.py install --prefix=${::graphite::install_dir} --install-lib=${::graphite::install_dir}/lib",
   }
 
 # DUP: partially repeated from config.pp
