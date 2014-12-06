@@ -8,6 +8,6 @@ description   'Install and configure Graphite for multiple relays, caches and se
 project_page  'https://github.com/pauloconnor/pauloconnor-graphite'
 
 dependency 'puppetlabs/stdlib'
-dependency 'puppetlabs/logrotate'
+dependency 'rodjek/puppet-logrotate'
 dependency 'maestrodev/wget'
 dependency 'puppetlabs/apache'
