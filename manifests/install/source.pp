@@ -5,15 +5,15 @@
 # === Parameters
 #
 # None.
-# 
+#
 class graphite::install::source inherits graphite::params {
 
   $whisper_dl_url = "http://github.com/graphite-project/whisper/archive/${graphite::whisper_version}.tar.gz"
   $whisper_dl_loc = "${graphite::build_dir}/whisper-${graphite::whisper_version}.tar.gz"
-  
+
   $webapp_dl_url  = "http://github.com/graphite-project/graphite-web/archive/${graphite::graphite_version}.tar.gz"
   $webapp_dl_loc  = "${graphite::build_dir}/graphite-web-${graphite::graphite_version}.tar.gz"
-  
+
   $carbon_dl_url  = "https://github.com/graphite-project/carbon/archive/${graphite::carbon_version}.tar.gz"
   $carbon_dl_loc  = "${graphite::build_dir}/carbon-${graphite::carbon_version}.tar.gz"
 
@@ -24,16 +24,17 @@ class graphite::install::source inherits graphite::params {
     mode    => '0755',
   }
 
-  file { $graphite::storage_dir:
-    ensure => directory,
-    owner  => 'www-data',
-    group  => 'www-data',
-    mode   => '0755',
-    before => [
-      Exec['install_carbon'],
-      Exec['install_graphite'],
-    ]
-  }
+# DUP defined in config.pp
+#  file { $graphite::storage_dir:
+#    ensure => directory,
+#    owner  => 'www-data',
+#    group  => 'www-data',
+#    mode   => '0755',
+#    before => [
+#      Exec['install_carbon'],
+#      Exec['install_graphite'],
+#    ]
+#  }
 
   wget::fetch { 'wget_whisper':
     source      => $whisper_dl_url,
@@ -90,20 +91,21 @@ class graphite::install::source inherits graphite::params {
     command     => "/usr/bin/python setup.py install --prefix=${::graphite::install_dir} --install-lib=${::graphite::install_dir}/lib",
   }
 
-  file { [
-      "${graphite::install_dir}/bin",
-      "${graphite::install_dir}/conf",
-      "${graphite::install_dir}/examples",
-      "${graphite::install_dir}/lib",
-      "${graphite::install_dir}/webapp",
-      "${graphite::storage_dir}/log",
-      "${graphite::storage_dir}/log/webapp",
-      ]:
-    ensure     => directory,
-    owner      => 'www-data',
-    group      => 'www-data',
-    recurse    => true,
-  }
+# DUP: partially repeated from config.pp
+#  file { [
+#      "${graphite::install_dir}/bin",
+#      "${graphite::install_dir}/conf",
+#      "${graphite::install_dir}/examples",
+#      "${graphite::install_dir}/lib",
+#      "${graphite::install_dir}/webapp",
+#      "${graphite::storage_dir}/log",
+#      "${graphite::storage_dir}/log/webapp",
+#      ]:
+#    ensure     => directory,
+#    owner      => 'www-data',
+#    group      => 'www-data',
+#    recurse    => true,
+#  }
 
   exec { 'set_storage_permissions':
     command => "/bin/chown -R www-data:www-data ${graphite::storage_dir}",
