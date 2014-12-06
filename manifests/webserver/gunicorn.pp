@@ -19,8 +19,8 @@ class graphite::webserver::gunicorn inherits graphite::params {
     'gunicorn':
       ensure   => installed,
       provider => 'pip',
-      before   => Exec['Chown graphite for web user'],
-      notify   => Exec['Chown graphite for web user'];
+      #before   => Exec['Chown graphite for web user'],
+      #notify   => Exec['Chown graphite for web user'];
   }->
   file { '/etc/init.d/gunicorn':
     ensure  => file,
@@ -37,7 +37,7 @@ class graphite::webserver::gunicorn inherits graphite::params {
       require    => [
         Package['gunicorn'],
         Exec['Initial django db creation'],
-        Exec['Chown graphite for web user']
+        #        Exec['Chown graphite for web user']
       ];
   }
 
