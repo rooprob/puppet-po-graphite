@@ -19,8 +19,8 @@ class graphite::install::source inherits graphite::params {
 
   file { $graphite::install_dir:
     ensure  => directory,
-    owner   => 'www-data',
-    group   => 'www-data',
+    owner   => 'carbon',
+    group   => 'carbon',
     mode    => '0755',
   }
 
@@ -41,10 +41,9 @@ class graphite::install::source inherits graphite::params {
   }
 
   exec { 'graphite_venv':
+    umask   => '022',
     command => '/usr/bin/virtualenv /opt/graphite',
     creates => '/opt/graphite/bin/activate',
-    timeout => 0,
-    verbose => false,
     require => Package['python-virtualenv'],
   }
 
@@ -142,7 +141,7 @@ class graphite::install::source inherits graphite::params {
   }
 
   exec { 'set_storage_permissions':
-    command => "/bin/chown -R www-data:www-data ${graphite::storage_dir}",
+    command => "/bin/chown -R carbon:carbon ${graphite::storage_dir}",
     require => Exec['install_carbon'],
   }
 }

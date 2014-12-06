@@ -12,6 +12,7 @@
 # Description: Enables Graphites carbon-aggregator data aggregation engine
 ### END INIT INFO
 
+export PATH=/opt/graphite/bin:$PATH
 <% scope.lookupvar('graphite::caches').each do | name, cache | 
 	cc = 0
 	start_collection = ""
