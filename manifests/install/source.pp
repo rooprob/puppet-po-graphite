@@ -53,7 +53,7 @@ class graphite::install::source inherits graphite::params {
   }->
   # whisper goes to the /usr/bin by default. No overrides possible
   exec { 'install_whisper':
-    umask   => 002,
+    umask   => 022,
     cwd     => "${graphite::build_dir}/whisper-${graphite::whisper_version}",
     command => '/usr/bin/python setup.py install',
   }
@@ -70,11 +70,11 @@ class graphite::install::source inherits graphite::params {
     command     => "/bin/tar -xzvf ${webapp_dl_loc}",
   }->
   exec { 'install_ez_setup':
-    umask   => 002,
+    umask   => 022,
     command => "/usr/bin/curl https://bootstrap.pypa.io/ez_setup.py | /usr/bin/python",
   }->
   exec { 'install_graphite_prereqs':
-    umask   => 002,
+    umask   => 022,
     cwd     => "${graphite::build_dir}/graphite-web-${graphite::graphite_version}",
     command => "/usr/bin/pip install -U -r requirements.txt",
     require => [
@@ -84,7 +84,7 @@ class graphite::install::source inherits graphite::params {
     ]
   }->
   exec { 'install_graphite':
-    umask   => 002,
+    umask   => 022,
     cwd     => "${graphite::build_dir}/graphite-web-${graphite::graphite_version}",
     command => "/usr/bin/python setup.py install --prefix=${graphite::install_dir} --install-lib=${graphite::install_dir}/webapp",
   }
@@ -101,7 +101,7 @@ class graphite::install::source inherits graphite::params {
     command     => "/bin/tar -xzvf ${carbon_dl_loc}",
   }->
   exec { 'install_carbon_prereqs':
-    umask   => 002,
+    umask   => 022,
     cwd     => "${graphite::build_dir}/carbon-${graphite::carbon_version}",
     command => "/usr/bin/pip install -U -r requirements.txt",
     require => [
@@ -109,7 +109,7 @@ class graphite::install::source inherits graphite::params {
     ]
   }->
   exec { 'install_carbon':
-    umask   => 002,
+    umask   => 022,
     cwd     => "${graphite::build_dir}/carbon-${graphite::carbon_version}",
     command => "/usr/bin/python setup.py install --prefix=${::graphite::install_dir} --install-lib=${::graphite::install_dir}/lib",
   }
