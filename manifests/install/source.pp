@@ -64,6 +64,11 @@ class graphite::install::source inherits graphite::params {
     cwd         => $graphite::build_dir,
     command     => "/bin/tar -xzvf ${webapp_dl_loc}",
   }->
+  exec { 'install_graphite_prereqs':
+    umask   => 002,
+    cwd     => "${graphite::build_dir}/graphite-web-${graphite::graphite_version}",
+    command => "/usr/bin/pip install -U -r requirements.txt",
+  }->
   exec { 'install_graphite':
     cwd         => "${graphite::build_dir}/graphite-web-${graphite::graphite_version}",
     command     => "/usr/bin/python setup.py install --prefix=${graphite::install_dir} --install-lib=${graphite::install_dir}/webapp",
@@ -79,6 +84,11 @@ class graphite::install::source inherits graphite::params {
   exec { 'unpack_carbon':
     cwd         => $graphite::build_dir,
     command     => "/bin/tar -xzvf ${carbon_dl_loc}",
+  }->
+  exec { 'install_carbon_prereqs':
+    umask   => 002,
+    cwd     => "${graphite::build_dir}/carbon-${graphite::carbon_version}",
+    command => "/usr/bin/pip install -U -r requirements.txt",
   }->
   exec { 'install_carbon':
     cwd         => "${graphite::build_dir}/carbon-${graphite::carbon_version}",
