@@ -56,8 +56,8 @@ class graphite::install::source inherits graphite::params {
   }
 
   wget::fetch { 'wget_graphite':
-    source      => $graphite::params::webapp_dl_url,
-    destination => $graphite::params::webapp_dl_loc,
+    source      => $webapp_dl_url,
+    destination => $webapp_dl_loc,
     timeout     => 0,
     verbose     => false,
     require     => File[$::graphite::install_dir],
