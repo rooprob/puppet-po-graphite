@@ -80,13 +80,15 @@ class graphite::config inherits graphite::params {
       owner   => $graphite::user,
       group   => $graphite::group,
       mode    => '0644',
-      content => template('graphite/opt/graphite/webapp/graphite/local_settings.py.erb');
+      content => template('graphite/opt/graphite/webapp/graphite/local_settings.py.erb'),
+      require => File[$graphite::install_dir];
     "${graphite::install_dir}/conf/graphite.wsgi":
       ensure  => file,
       owner   => $graphite::user,
       group   => $graphite::group,
       mode    => '0644',
-      content => template('graphite/opt/graphite/conf/graphite.wsgi.erb');
+      content => template('graphite/opt/graphite/conf/graphite.wsgi.erb'),
+      require => File[$graphite::install_dir];
   }
 
   if $graphite::webapp_remote_user_header_name != undef {
@@ -200,7 +202,7 @@ class graphite::config inherits graphite::params {
     rotate_every  => 'day',
   }
 
-  
+
   file { '/etc/init.d/carbon-cache':
     ensure  => file,
     mode    => '0750',

@@ -107,21 +107,20 @@ class graphite::install::source inherits graphite::params {
     command => "/usr/bin/python setup.py install --prefix=${::graphite::install_dir} --install-lib=${::graphite::install_dir}/lib",
   }
 
-# DUP: partially repeated from config.pp
-#  file { [
-#      "${graphite::install_dir}/bin",
-#      "${graphite::install_dir}/conf",
-#      "${graphite::install_dir}/examples",
-#      "${graphite::install_dir}/lib",
-#      "${graphite::install_dir}/webapp",
-#      "${graphite::storage_dir}/log",
-#      "${graphite::storage_dir}/log/webapp",
-#      ]:
-#    ensure     => directory,
-#    owner      => 'www-data',
-#    group      => 'www-data',
-#    recurse    => true,
-#  }
+  # DUP: partially repeated from config.pp
+  file { [
+      "${graphite::install_dir}/bin",
+      "${graphite::install_dir}/conf",
+      "${graphite::install_dir}/examples",
+      "${graphite::install_dir}/lib",
+      "${graphite::install_dir}/webapp",
+      ]:
+    ensure  => directory,
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0755',
+    recurse => true,
+  }
 
   exec { 'set_storage_permissions':
     command => "/bin/chown -R www-data:www-data ${graphite::storage_dir}",
