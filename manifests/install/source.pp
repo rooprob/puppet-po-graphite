@@ -36,8 +36,16 @@ class graphite::install::source inherits graphite::params {
 #    ]
 #  }
 
-  package{['libcairo2-dev','python-pip','python-dev']:
+  package{['python-virtualenv', 'libcairo2-dev','python-pip','python-dev']:
     ensure => present
+  }
+
+  exec { 'graphite_venv':
+    command => '/usr/bin/virtualenv /opt/graphite',
+    creates => '/opt/graphite/bin/activate',
+    timeout => 0,
+    verbose => false,
+    require => Package['python-virtualenv'],
   }
 
   wget::fetch { 'wget_whisper':
@@ -55,7 +63,8 @@ class graphite::install::source inherits graphite::params {
   exec { 'install_whisper':
     umask   => 022,
     cwd     => "${graphite::build_dir}/whisper-${graphite::whisper_version}",
-    command => '/usr/bin/python setup.py install',
+    command => '/opt/graphite/bin/python setup.py install',
+    require => Exec['graphite_venv'],
   }
 
   wget::fetch { 'wget_graphite':
@@ -71,12 +80,13 @@ class graphite::install::source inherits graphite::params {
   }->
   exec { 'install_ez_setup':
     umask   => 022,
-    command => "/usr/bin/curl https://bootstrap.pypa.io/ez_setup.py | /usr/bin/python",
+    command => "/usr/bin/curl https://bootstrap.pypa.io/ez_setup.py | /opt/graphite/bin/python",
+    require => Exec['graphite_venv'],
   }->
   exec { 'install_graphite_prereqs':
     umask   => 022,
     cwd     => "${graphite::build_dir}/graphite-web-${graphite::graphite_version}",
-    command => "/usr/bin/pip install -U -r requirements.txt",
+    command => "/opt/graphite/bin/pip install -U -r requirements.txt",
     require => [
       Package['libcairo2-dev'],
       Package['python-dev'],
@@ -86,7 +96,7 @@ class graphite::install::source inherits graphite::params {
   exec { 'install_graphite':
     umask   => 022,
     cwd     => "${graphite::build_dir}/graphite-web-${graphite::graphite_version}",
-    command => "/usr/bin/python setup.py install --prefix=${graphite::install_dir} --install-lib=${graphite::install_dir}/webapp",
+    command => "/opt/graphite/bin/python setup.py install --prefix=${graphite::install_dir} --install-lib=${graphite::install_dir}/webapp",
   }
 
   wget::fetch { 'wget_carbon':
@@ -103,15 +113,16 @@ class graphite::install::source inherits graphite::params {
   exec { 'install_carbon_prereqs':
     umask   => 022,
     cwd     => "${graphite::build_dir}/carbon-${graphite::carbon_version}",
-    command => "/usr/bin/pip install -U -r requirements.txt",
+    command => "/opt/graphite/bin/pip install -U -r requirements.txt",
     require => [
+      Exec['graphite_venv'],
       Package['python-pip'],
     ]
   }->
   exec { 'install_carbon':
     umask   => 022,
     cwd     => "${graphite::build_dir}/carbon-${graphite::carbon_version}",
-    command => "/usr/bin/python setup.py install --prefix=${::graphite::install_dir} --install-lib=${::graphite::install_dir}/lib",
+    command => "/opt/graphite/bin/python setup.py install --prefix=${::graphite::install_dir} --install-lib=${::graphite::install_dir}/lib",
   }
 
   # DUP: partially repeated from config.pp
