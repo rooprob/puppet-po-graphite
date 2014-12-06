@@ -60,7 +60,7 @@ class graphite::install::source inherits graphite::params {
     destination => $graphite::params::webapp_dl_loc,
     timeout     => 0,
     verbose     => false,
-    require     => File[$graphite::install_dir],
+    require     => File[$::graphite::install_dir],
   }->
   exec { 'unpack_graphite':
     #creates     => $graphite::params::webapp_dl_loc,
