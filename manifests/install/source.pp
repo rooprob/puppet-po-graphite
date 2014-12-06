@@ -36,7 +36,7 @@ class graphite::install::source inherits graphite::params {
 #    ]
 #  }
 
-  package{'libcairo2-dev':
+  package{['libcairo2-dev','python-pip']:
     ensure => present
   }
 
@@ -114,6 +114,7 @@ class graphite::install::source inherits graphite::params {
       "${graphite::install_dir}/examples",
       "${graphite::install_dir}/lib",
       "${graphite::install_dir}/webapp",
+      "${graphite::install_dir}/webapp/graphite",
       ]:
     ensure  => directory,
     owner   => 'root',
