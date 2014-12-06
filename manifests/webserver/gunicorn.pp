@@ -17,15 +17,8 @@ class graphite::webserver::gunicorn inherits graphite::params {
 
   package {
     'gunicorn':
-      ensure   => installed,
-      #provider => 'pip',
-      #before   => Exec['Chown graphite for web user'],
-      #notify   => Exec['Chown graphite for web user'];
-  }->
-  file { '/etc/init.d/gunicorn':
-    ensure  => file,
-    mode    => '0755',
-    source  => 'puppet:///modules/graphite/etc/init.d/gunicorn',
+      ensure    => installed,
+      provider  => 'dpkg',
   }->
   service {
     'gunicorn':
