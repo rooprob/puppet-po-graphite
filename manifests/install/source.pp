@@ -36,7 +36,7 @@ class graphite::install::source inherits graphite::params {
 #    ]
 #  }
 
-  package{['libcairo2-dev','python-pip']:
+  package{['libcairo2-dev','python-pip','python-dev']:
     ensure => present
   }
 
@@ -79,6 +79,7 @@ class graphite::install::source inherits graphite::params {
     command => "/usr/bin/pip install -U -r requirements.txt",
     require => [
       Package['libcairo2-dev'],
+      Package['python-dev'],
       Package['python-pip'],
     ]
   }->
