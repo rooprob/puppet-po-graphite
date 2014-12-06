@@ -77,7 +77,10 @@ class graphite::install::source inherits graphite::params {
     umask   => 002,
     cwd     => "${graphite::build_dir}/graphite-web-${graphite::graphite_version}",
     command => "/usr/bin/pip install -U -r requirements.txt",
-    require => Package['libcairo2-dev'],
+    require => [
+      Package['libcairo2-dev'],
+      Package['python-pip'],
+    ]
   }->
   exec { 'install_graphite':
     umask   => 002,
@@ -100,6 +103,9 @@ class graphite::install::source inherits graphite::params {
     umask   => 002,
     cwd     => "${graphite::build_dir}/carbon-${graphite::carbon_version}",
     command => "/usr/bin/pip install -U -r requirements.txt",
+    require => [
+      Package['python-pip'],
+    ]
   }->
   exec { 'install_carbon':
     umask   => 002,
