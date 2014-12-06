@@ -44,13 +44,11 @@ class graphite::install::source inherits graphite::params {
     require     => File[$::graphite::install_dir],
   }->
   exec { 'unpack_whisper':
-    #creates     => $graphite::params::whisper_dl_loc,
     cwd         => $graphite::build_dir,
     command     => "/bin/tar -xzvf ${whisper_dl_loc}",
   }->
   # whisper goes to the /usr/bin by default. No overrides possible
   exec { 'install_whisper':
-    #creates     => '/usr/local/bin/whisper-info.py',
     cwd         => "${graphite::build_dir}/whisper-${graphite::whisper_version}",
     command     => '/usr/bin/python setup.py install',
   }
@@ -63,12 +61,10 @@ class graphite::install::source inherits graphite::params {
     require     => File[$::graphite::install_dir],
   }->
   exec { 'unpack_graphite':
-    #creates     => $graphite::params::webapp_dl_loc,
     cwd         => $graphite::build_dir,
     command     => "/bin/tar -xzvf ${webapp_dl_loc}",
   }->
   exec { 'install_graphite':
-    #creates     => "${graphite::install_dir}/webapp",
     cwd         => "${graphite::build_dir}/graphite-web-${graphite::graphite_version}",
     command     => "/usr/bin/python setup.py install --prefix=${graphite::install_dir} --install-lib=${graphite::install_dir}/webapp",
   }
@@ -81,12 +77,10 @@ class graphite::install::source inherits graphite::params {
     require     => File[$::graphite::install_dir],
   }->
   exec { 'unpack_carbon':
-    #creates     => $graphite::params::carbon_dl_loc,
     cwd         => $graphite::build_dir,
     command     => "/bin/tar -xzvf ${carbon_dl_loc}",
   }->
   exec { 'install_carbon':
-    #creates     => "${::graphite::install_dir}/lib",
     cwd         => "${graphite::build_dir}/carbon-${graphite::carbon_version}",
     command     => "/usr/bin/python setup.py install --prefix=${::graphite::install_dir} --install-lib=${::graphite::install_dir}/lib",
   }
