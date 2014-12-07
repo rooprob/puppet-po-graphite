@@ -136,7 +136,6 @@ class graphite::install::source inherits graphite::params {
     owner   => 'root',
     group   => 'root',
     mode    => '0755',
-    recurse => true,
   }
 
   exec { 'set_storage_permissions':
